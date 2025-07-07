@@ -12,13 +12,23 @@ import {
   Modal,
   AppState,
   ActivityIndicator,
+  Image,
+  Linking,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 
 // Configure notifications for Expo Go (local notifications only)
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
   }),
@@ -70,6 +80,7 @@ interface Suggestion {
   price: number;
   description: string;
   image: string;
+  url?: string; // Product URL for purchase
   score: number;
   personId: string;
   status: 'pending' | 'accepted' | 'rejected';
@@ -79,6 +90,8 @@ interface SuggestionWithPerson {
   suggestion: Suggestion;
   person: Person;
 }
+
+
 
 type Screen = 'dashboard' | 'people' | 'budget' | 'suggestions';
 
@@ -91,11 +104,13 @@ export default function App() {
   const [editingPerson, setEditingPerson] = useState<Person | null>(null);
   const [suggestions, setSuggestions] = useState<SuggestionWithPerson[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
   
   // Notification and timer state
   const [pendingSuggestions, setPendingSuggestions] = useState<Set<string>>(new Set());
   const [automaticSuggestionsEnabled, setAutomaticSuggestionsEnabled] = useState(true);
   const timersRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
+  const peopleRef = useRef<Person[]>([]);
   const appState = useRef(AppState.currentState);
   
   // Authentication state
@@ -118,6 +133,54 @@ export default function App() {
     address: { street: '', city: '', postcode: '' },
     contactInfo: { phone: '', email: '' },
   });
+
+  // Load products when store screen is accessed
+  useEffect(() => {
+    if (currentScreen === 'store' && products.length === 0) {
+      loadProducts();
+    }
+  }, [currentScreen]);
+
+  // Keep peopleRef in sync with people state
+  useEffect(() => {
+    peopleRef.current = people;
+  }, [people]);
+
+  // Load people from storage on app start
+  useEffect(() => {
+    const loadPeopleFromStorage = async () => {
+      try {
+        const storedPeople = await AsyncStorage.getItem('people');
+        if (storedPeople) {
+          const parsedPeople = JSON.parse(storedPeople);
+          setPeople(parsedPeople);
+          console.log(`Loaded ${parsedPeople.length} people from storage`);
+        }
+      } catch (error) {
+        console.error('Error loading people from storage:', error);
+      }
+    };
+    
+    loadPeopleFromStorage();
+  }, []);
+
+  // Save people to storage whenever people state changes
+  useEffect(() => {
+    const savePeopleToStorage = async () => {
+      try {
+        await AsyncStorage.setItem('people', JSON.stringify(people));
+        console.log(`Saved ${people.length} people to storage`);
+      } catch (error) {
+        console.error('Error saving people to storage:', error);
+      }
+    };
+    
+    if (people.length > 0) {
+      savePeopleToStorage();
+    }
+  }, [people]);
+
+
 
   // Setup notifications
   useEffect(() => {
@@ -176,7 +239,12 @@ export default function App() {
       
       // Listen for notifications received while app is in foreground
       const foregroundListener = Notifications.addNotificationReceivedListener(notification => {
-        console.log('Local notification received in foreground:', notification);
+        console.log('Local notification received in foreground:', {
+          title: notification.request.content.title,
+          body: notification.request.content.body,
+          data: notification.request.content.data,
+          identifier: notification.request.identifier
+        });
       });
       
       return () => {
@@ -215,9 +283,9 @@ export default function App() {
       return;
     }
 
-    // Calculate a random interval between 30 seconds and 5 minutes for this person
-    const minInterval = 30000; // 30 seconds
-    const maxInterval = 300000; // 5 minutes
+    // Calculate a random interval between 10 seconds and 15 seconds for testing
+    const minInterval = 10000; // 10 seconds
+    const maxInterval = 15000; // 15 seconds
     const randomInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
     
     console.log(`Scheduling automatic suggestion for ${person.firstName} in ${Math.round(randomInterval/1000)} seconds...`);
@@ -225,10 +293,20 @@ export default function App() {
     const timerId = setTimeout(async () => {
       try {
         console.log(`Timer fired for ${person.firstName}, generating suggestion...`);
+    console.log(`Current people count: ${peopleRef.current.length}`);
+    console.log(`Current people:`, peopleRef.current.map(p => p.firstName));
         
         // Check if we still have people and budget
-        if (people.length === 0) {
+        const currentPeople = peopleRef.current;
+        if (currentPeople.length === 0) {
           console.log('No people to suggest for, skipping automatic suggestion');
+          return;
+        }
+        
+        // Check if the person still exists
+        const personStillExists = currentPeople.find(p => p.id === person.id);
+        if (!personStillExists) {
+          console.log(`Person ${person.firstName} no longer exists, skipping automatic suggestion`);
           return;
         }
         
@@ -277,6 +355,7 @@ export default function App() {
             const suggestionWithPerson: SuggestionWithPerson = {
               suggestion: {
                 ...suggestion,
+                id: `${person.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Ensure unique ID
                 personId: person.id,
                 status: 'pending'
               },
@@ -401,6 +480,23 @@ export default function App() {
     );
   };
 
+  const removeSuggestion = (suggestionId: string) => {
+    Alert.alert(
+      'Remove Suggestion',
+      'Are you sure you want to remove this suggestion? This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => {
+            setSuggestions(prev => prev.filter(s => s.suggestion.id !== suggestionId));
+          }
+        }
+      ]
+    );
+  };
+
   const acceptSuggestion = (suggestionWithPerson: SuggestionWithPerson) => {
     const updatedSuggestion = {
       ...suggestionWithPerson,
@@ -454,12 +550,20 @@ export default function App() {
   const handleBuyGift = (suggestionWithPerson: SuggestionWithPerson) => {
     Alert.alert(
       '🛒 Purchase Gift',
-      `Redirecting to Gardenia Shop to purchase ${suggestionWithPerson.suggestion.name} for £${suggestionWithPerson.suggestion.price}`,
+      `Ready to purchase ${suggestionWithPerson.suggestion.name} for £${suggestionWithPerson.suggestion.price}?`,
       [
-        { text: 'Continue', onPress: () => {
-          // Here you would integrate with the actual purchase flow
-          Alert.alert('Success', 'Redirecting to checkout...');
-        }},
+        { 
+          text: 'Go to Checkout', 
+          onPress: () => {
+            // Navigate to the specific product page
+            if (suggestionWithPerson.suggestion.url) {
+              Linking.openURL(suggestionWithPerson.suggestion.url);
+            } else {
+              // Fallback to main shop if no specific URL
+              Linking.openURL('https://gardeniashop.co.uk/');
+            }
+          }
+        },
         { text: 'Cancel', style: 'cancel' }
       ]
     );
@@ -494,6 +598,7 @@ export default function App() {
           const suggestionWithPerson: SuggestionWithPerson = {
             suggestion: {
               ...newSuggestion,
+              id: `${person.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Ensure unique ID
               personId: person.id,
               status: 'pending'
             },
@@ -572,7 +677,7 @@ export default function App() {
       // Show confirmation
       Alert.alert(
         'Person Added! 🌸',
-        `${person.firstName} has been added. You'll receive personalized gift suggestions soon!`,
+        `${person.firstName} has been added!`,
         [{ text: 'OK' }]
       );
     } else if (currentUser && currentUser.budget > 0 && !automaticSuggestionsEnabled) {
@@ -737,8 +842,8 @@ export default function App() {
         return;
       }
       
-      for (const person of peopleWithoutSuggestions) {
-        const response = await fetch('http://192.168.1.222:4000/api/suggest', {
+              for (const person of peopleWithoutSuggestions) {
+          const response = await fetch('http://192.168.1.222:4000/api/suggest', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -793,40 +898,33 @@ export default function App() {
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>{people.length}</Text>
-            <Text style={styles.statLabel}>People</Text>
+            <Text style={styles.statLabel} numberOfLines={1} adjustsFontSizeToFit>People</Text>
           </View>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>£{currentUser?.budget || 0}</Text>
-            <Text style={styles.statLabel}>Budget</Text>
+            <Text style={styles.statLabel} numberOfLines={1} adjustsFontSizeToFit>Budget</Text>
             {(!currentUser || currentUser.budget <= 0) && (
               <View style={styles.budgetWarning}>
-                <Text style={styles.budgetWarningText}>Set budget</Text>
+                <Text style={styles.budgetWarningText} numberOfLines={1} adjustsFontSizeToFit>Set budget</Text>
               </View>
             )}
           </View>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>{suggestions.length}</Text>
-            <Text style={styles.statLabel}>Suggestions</Text>
-            {pendingSuggestions.size > 0 && (
-              <View style={styles.pendingIndicator}>
-                <Text style={styles.pendingText}>⏳ {pendingSuggestions.size} pending</Text>
-              </View>
-            )}
-            {suggestions.filter(s => s.suggestion.status === 'accepted').length > 0 && (
-              <View style={styles.acceptedIndicator}>
-                <Text style={styles.acceptedText}>✅ {suggestions.filter(s => s.suggestion.status === 'accepted').length} accepted</Text>
-              </View>
-            )}
+            <Text style={styles.statLabel} numberOfLines={1} adjustsFontSizeToFit>Suggestions</Text>
           </View>
         </View>
         
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>📊 Recent Activity</Text>
+                  <View style={styles.card}>
+            <View style={{ flexDirection: 'row', alignItems: 'baseline', marginBottom: 12 }}>
+              <Ionicons name="stats-chart-outline" size={20} color="#007bff" style={{ marginRight: 8 }} />
+              <Text style={styles.cardTitle}>Recent Activity</Text>
+            </View>
           {people.length > 0 ? (
             <View style={styles.activityItem}>
-              <Text style={styles.activityText}>
-                ✨ Added {people[people.length - 1].firstName} {people[people.length - 1].lastName} ({people[people.length - 1].relationship})
-              </Text>
+                              <Text style={styles.activityText}>
+                  Added {people[people.length - 1].firstName} {people[people.length - 1].lastName} ({people[people.length - 1].relationship})
+                </Text>
               <Text style={styles.activityTime}>Just now</Text>
             </View>
           ) : (
@@ -835,22 +933,22 @@ export default function App() {
         </View>
         
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>�� Next Steps</Text>
-          <View style={styles.stepItem}>
-            <Text style={styles.stepNumber}>1</Text>
+          <Text style={styles.cardTitle}>Next Steps</Text>
+          <View style={[styles.stepItem, { flexDirection: 'row', alignItems: 'center' }]}> 
+            <Ionicons name="person-add-outline" size={20} color="#28a745" style={{ marginRight: 8 }} />
             <Text style={styles.stepText}>Add friends & family</Text>
           </View>
-          <View style={styles.stepItem}>
-            <Text style={styles.stepNumber}>2</Text>
+          <View style={[styles.stepItem, { flexDirection: 'row', alignItems: 'center' }]}> 
+            <Ionicons name="cash-outline" size={20} color="#ffc107" style={{ marginRight: 8 }} />
             <Text style={styles.stepText}>Set budget preferences</Text>
           </View>
-          <View style={styles.stepItem}>
-            <Text style={styles.stepNumber}>3</Text>
-            <Text style={styles.stepText}>Enable AI suggestions</Text>
+          <View style={[styles.stepItem, { flexDirection: 'row', alignItems: 'center' }]}> 
+            <Ionicons name="bulb-outline" size={20} color="#17a2b8" style={{ marginRight: 8 }} />
+            <Text style={styles.stepText}>We suggest gifts for them</Text>
           </View>
-          <View style={styles.stepItem}>
-            <Text style={styles.stepNumber}>4</Text>
-            <Text style={styles.stepText}>Connect to Gardenia Shop</Text>
+          <View style={[styles.stepItem, { flexDirection: 'row', alignItems: 'center' }]}> 
+            <Ionicons name="cart-outline" size={20} color="#dc3545" style={{ marginRight: 8 }} />
+            <Text style={styles.stepText}>We let you buy for them</Text>
           </View>
         </View>
       </View>
@@ -864,7 +962,10 @@ export default function App() {
           style={styles.addButton}
           onPress={() => setShowAddPerson(true)}
         >
-          <Text style={styles.addButtonText}>✨ Add Person</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="person-add-outline" size={20} color="#ffffff" style={{ marginRight: 8 }} />
+            <Text style={styles.addButtonText}>Add Person</Text>
+          </View>
         </TouchableOpacity>
         
         {people.map((person) => (
@@ -881,22 +982,19 @@ export default function App() {
                 {person.dateOfBirth.day && person.dateOfBirth.month && person.dateOfBirth.year && (
                   <Text style={styles.personDate}>🎂 {person.dateOfBirth.day}/{person.dateOfBirth.month}/{person.dateOfBirth.year}</Text>
                 )}
-                {pendingSuggestions.has(person.id) && (
-                  <Text style={styles.pendingSuggestionText}>⏳ Suggestions coming soon...</Text>
-                )}
               </View>
               <View style={styles.personActions}>
                 <TouchableOpacity
                   style={styles.editButton}
                   onPress={() => startEditing(person)}
                 >
-                  <Text style={styles.editButtonText}>✏️</Text>
+                  <Ionicons name="pencil-outline" size={20} color="#ffffff" />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => deletePerson(person.id)}
                 >
-                  <Text style={styles.deleteButtonText}>×</Text>
+                  <Ionicons name="close" size={20} color="#ffffff" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -910,7 +1008,10 @@ export default function App() {
             
             {person.contactInfo?.phone && (
               <View style={styles.contactSection}>
-                <Text style={styles.contactText}>📞 {person.contactInfo.phone}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="call-outline" size={16} color="#6c757d" style={{ marginRight: 4 }} />
+                  <Text style={styles.contactText}>{person.contactInfo.phone}</Text>
+                </View>
               </View>
             )}
           </View>
@@ -918,7 +1019,7 @@ export default function App() {
         
         {people.length === 0 && (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyEmoji}>👥</Text>
+            <Ionicons name="people-outline" size={60} color="#6c757d" style={{ marginBottom: 16 }} />
             <Text style={styles.emptyTitle}>No people added yet</Text>
             <Text style={styles.emptySubtitle}>
               Start by adding friends, family, or colleagues to receive personalized gift suggestions
@@ -940,6 +1041,8 @@ export default function App() {
             keyboardType="numeric"
             value={currentUser?.budget.toString()}
             onChangeText={(text) => updateBudget(parseInt(text) || 0)}
+            returnKeyType="done"
+            onSubmitEditing={() => Keyboard.dismiss()}
           />
           <Text style={styles.budgetText}>Current: £{currentUser?.budget}</Text>
         </View>
@@ -965,49 +1068,36 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>🌸 Gift Suggestions</Text>
-        <View style={styles.headerActions}>
-          <TouchableOpacity 
-            style={[styles.button, styles.secondaryButton]} 
-            onPress={clearAllSuggestions}
-          >
-            <Text style={styles.buttonText}>Clear All</Text>
-          </TouchableOpacity>
-        </View>
+      </View>
+      
+      <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 8 }}>
+        <TouchableOpacity 
+          style={{
+            backgroundColor: suggestions.length > 0 ? '#f8f9fa' : '#f1f3f4',
+            borderWidth: 1,
+            borderColor: suggestions.length > 0 ? '#e9ecef' : '#d1d5db',
+            borderRadius: 12,
+            paddingVertical: 12,
+            paddingHorizontal: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: suggestions.length > 0 ? 0.05 : 0,
+            shadowRadius: 2,
+            elevation: suggestions.length > 0 ? 1 : 0,
+            opacity: suggestions.length > 0 ? 1 : 0.6,
+          }} 
+          onPress={suggestions.length > 0 ? clearAllSuggestions : undefined}
+          disabled={suggestions.length === 0}
+        >
+          <Ionicons name="trash-outline" size={18} color={suggestions.length > 0 ? '#6c757d' : '#9ca3af'} style={{ marginRight: 8 }} />
+          <Text style={{ color: suggestions.length > 0 ? '#6c757d' : '#9ca3af', fontSize: 16, fontWeight: '500' }}>Clear All Suggestions</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Debug Info */}
-      <View style={styles.debugSection}>
-        <Text style={styles.debugTitle}>Debug Info:</Text>
-        <Text style={styles.debugText}>People: {people.length}</Text>
-        <Text style={styles.debugText}>Budget: £{currentUser?.budget || 0}</Text>
-        <Text style={styles.debugText}>Suggestions: {suggestions.length}</Text>
-        <Text style={styles.debugText}>Pending: {pendingSuggestions.size}</Text>
-        <Text style={styles.debugText}>Loading: {loadingSuggestions ? 'Yes' : 'No'}</Text>
-        <Text style={styles.debugText}>Auto Suggestions: {automaticSuggestionsEnabled ? 'ON' : 'OFF'}</Text>
-        <TouchableOpacity 
-          style={[styles.button, styles.clearButton]} 
-          onPress={() => {
-            setPendingSuggestions(new Set());
-            timersRef.current.forEach(timer => clearTimeout(timer));
-            timersRef.current.clear();
-            Alert.alert('Cleared', 'All pending suggestions cleared.');
-          }}
-        >
-          <Text style={styles.buttonText}>Clear Pending</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.button, styles.clearButton]} 
-          onPress={() => {
-            setPendingSuggestions(new Set());
-            timersRef.current.forEach(timer => clearTimeout(timer));
-            timersRef.current.clear();
-            setSuggestions([]);
-            Alert.alert('Cleared', 'All suggestions and pending states cleared.');
-          }}
-        >
-          <Text style={styles.buttonText}>Clear Everything</Text>
-        </TouchableOpacity>
-      </View>
+
 
       {loadingSuggestions && (
         <View style={styles.loadingContainer}>
@@ -1038,18 +1128,60 @@ export default function App() {
                 <Text style={styles.personName}>
                   For {suggestionWithPerson.person.firstName} {suggestionWithPerson.person.lastName}
                 </Text>
-                <View style={[
-                  styles.statusBadge,
-                  suggestionWithPerson.suggestion.status === 'accepted' && styles.statusAccepted,
-                  suggestionWithPerson.suggestion.status === 'rejected' && styles.statusRejected
-                ]}>
-                  <Text style={styles.statusText}>
-                    {suggestionWithPerson.suggestion.status === 'pending' && '⏳ Pending'}
-                    {suggestionWithPerson.suggestion.status === 'accepted' && '✅ Accepted'}
-                    {suggestionWithPerson.suggestion.status === 'rejected' && '❌ Rejected'}
-                  </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={[
+                    styles.statusBadge,
+                    suggestionWithPerson.suggestion.status === 'accepted' && styles.statusAccepted,
+                    suggestionWithPerson.suggestion.status === 'rejected' && styles.statusRejected
+                  ]}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      {suggestionWithPerson.suggestion.status === 'pending' && (
+                        <>
+                          <Ionicons name="time-outline" size={16} color="#6c757d" style={{ marginRight: 4 }} />
+                          <Text style={styles.statusText}>Pending</Text>
+                        </>
+                      )}
+                      {suggestionWithPerson.suggestion.status === 'accepted' && (
+                        <>
+                          <Ionicons name="checkmark-circle-outline" size={16} color="#28a745" style={{ marginRight: 4 }} />
+                          <Text style={styles.statusText}>Accepted</Text>
+                        </>
+                      )}
+                      {suggestionWithPerson.suggestion.status === 'rejected' && (
+                        <>
+                          <Ionicons name="close-circle-outline" size={16} color="#dc3545" style={{ marginRight: 4 }} />
+                          <Text style={styles.statusText}>Rejected</Text>
+                        </>
+                      )}
+                    </View>
+                  </View>
+                  <TouchableOpacity
+                    style={{
+                      marginLeft: 8,
+                      width: 24,
+                      height: 24,
+                      borderRadius: 12,
+                      backgroundColor: '#f8f9fa',
+                      borderWidth: 1,
+                      borderColor: '#e9ecef',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                    onPress={() => removeSuggestion(suggestionWithPerson.suggestion.id)}
+                  >
+                    <Ionicons name="close" size={14} color="#dc3545" />
+                  </TouchableOpacity>
                 </View>
               </View>
+              
+              {/* Product Image */}
+              {suggestionWithPerson.suggestion.images && suggestionWithPerson.suggestion.images[0] && (
+                <Image
+                  source={{ uri: suggestionWithPerson.suggestion.images[0].src }}
+                  style={styles.suggestionImage}
+                  resizeMode="cover"
+                />
+              )}
               
               <Text style={styles.suggestionName}>{suggestionWithPerson.suggestion.name}</Text>
               <Text style={styles.suggestionPrice}>£{suggestionWithPerson.suggestion.price}</Text>
@@ -1087,42 +1219,55 @@ export default function App() {
     </View>
   );
 
+
+
   if (!isAuthenticated) {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
         
-        <View style={styles.authContainer}>
-          <View style={styles.authHeader}>
-            <Text style={styles.authEmoji}>🌸</Text>
-            <Text style={styles.title}>Spontaneous Gifting</Text>
-            <Text style={styles.subtitle}>AI-Powered Flower Gifts</Text>
-          </View>
+        <KeyboardAvoidingView 
+          style={{ flex: 1 }} 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.authContainer}>
+              <View style={styles.authHeader}>
+                <Text style={styles.authEmoji}>🌸</Text>
+                <Text style={styles.title}>Spontaneous Gifting</Text>
+                <Text style={styles.subtitle}>AI-Powered Flower Gifts</Text>
+              </View>
 
-          <View style={styles.authForm}>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              value={loginEmail}
-              onChangeText={setLoginEmail}
-              keyboardType="email-address"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              value={loginPassword}
-              onChangeText={setLoginPassword}
-              secureTextEntry
-            />
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-              <Text style={styles.buttonText}>Sign In</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <Text style={styles.demoText}>
-            Demo: Use any email/password to continue
-          </Text>
-        </View>
+              <View style={styles.authForm}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  value={loginEmail}
+                  onChangeText={setLoginEmail}
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  value={loginPassword}
+                  onChangeText={setLoginPassword}
+                  secureTextEntry
+                  returnKeyType="done"
+                  onSubmitEditing={handleLogin}
+                />
+                <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                  <Text style={styles.buttonText}>Sign In</Text>
+                </TouchableOpacity>
+              </View>
+              
+              <Text style={styles.demoText}>
+                Demo: Use any email/password to continue
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }
@@ -1141,9 +1286,7 @@ export default function App() {
           style={[styles.navButton, currentScreen === 'dashboard' && styles.activeNavButton]}
           onPress={() => setCurrentScreen('dashboard')}
         >
-          <Text style={[styles.navText, currentScreen === 'dashboard' && styles.activeNavText]}>
-            🏠
-          </Text>
+          <Ionicons name="home-outline" size={28} color={currentScreen === 'dashboard' ? '#007bff' : '#6c757d'} style={styles.navText} />
           <Text 
             style={[styles.navLabel, currentScreen === 'dashboard' && styles.activeNavLabel]}
             numberOfLines={1}
@@ -1156,9 +1299,7 @@ export default function App() {
           style={[styles.navButton, currentScreen === 'people' && styles.activeNavButton]}
           onPress={() => setCurrentScreen('people')}
         >
-          <Text style={[styles.navText, currentScreen === 'people' && styles.activeNavText]}>
-            👥
-          </Text>
+          <Ionicons name="people-outline" size={28} color={currentScreen === 'people' ? '#007bff' : '#6c757d'} style={styles.navText} />
           <Text 
             style={[styles.navLabel, currentScreen === 'people' && styles.activeNavLabel]}
             numberOfLines={1}
@@ -1171,9 +1312,7 @@ export default function App() {
           style={[styles.navButton, currentScreen === 'budget' && styles.activeNavButton]}
           onPress={() => setCurrentScreen('budget')}
         >
-          <Text style={[styles.navText, currentScreen === 'budget' && styles.activeNavText]}>
-            💰
-          </Text>
+          <Ionicons name="cash-outline" size={28} color={currentScreen === 'budget' ? '#007bff' : '#6c757d'} style={styles.navText} />
           <Text 
             style={[styles.navLabel, currentScreen === 'budget' && styles.activeNavLabel]}
             numberOfLines={1}
@@ -1186,71 +1325,97 @@ export default function App() {
           style={[styles.navButton, currentScreen === 'suggestions' && styles.activeNavButton]}
           onPress={() => setCurrentScreen('suggestions')}
         >
-          <Text style={[styles.navText, currentScreen === 'suggestions' && styles.activeNavText]}>
-            🤖
-          </Text>
+          <Ionicons name="bulb-outline" size={28} color={currentScreen === 'suggestions' ? '#007bff' : '#6c757d'} style={styles.navText} />
           <Text 
             style={[styles.navLabel, currentScreen === 'suggestions' && styles.activeNavLabel]}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            Suggestions
+            Suggestions ({suggestions.length})
           </Text>
         </TouchableOpacity>
+
       </View>
 
-      {currentScreen === 'dashboard' && renderDashboard()}
-      {currentScreen === 'people' && renderPeople()}
-      {currentScreen === 'budget' && renderBudget()}
-      {currentScreen === 'suggestions' && renderSuggestions()}
+      <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        {currentScreen === 'dashboard' && renderDashboard()}
+        {currentScreen === 'people' && renderPeople()}
+        {currentScreen === 'budget' && renderBudget()}
+        {currentScreen === 'suggestions' && renderSuggestions()}
+      </KeyboardAvoidingView>
 
       <Modal visible={showAddPerson || editingPerson !== null} animationType="slide">
         <SafeAreaView style={styles.modalContainer}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>
-              {editingPerson ? '✏️ Edit Person' : '✨ Add Person'}
-            </Text>
-            <TouchableOpacity onPress={() => {
-              setShowAddPerson(false);
-              setEditingPerson(null);
-              setNewPerson({
-                firstName: '',
-                lastName: '',
-                dateOfBirth: { day: '', month: '', year: '' },
-                gender: 'other',
-                relationship: '',
-                aboutThem: '',
-                favoriteColors: [],
-                favoriteFlowers: [],
-                allergies: [],
-                budgetRange: { min: 30, max: 80 },
-                specialDates: [],
-                address: { street: '', city: '', postcode: '' },
-                contactInfo: { phone: '', email: '' },
-              });
-            }}>
-              <Text style={styles.closeButton}>×</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <ScrollView style={styles.modalContent}>
+          <KeyboardAvoidingView 
+            style={{ flex: 1 }} 
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+          >
+            <View style={styles.modalHeader}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons 
+                  name={editingPerson ? "pencil-outline" : "person-add-outline"} 
+                  size={24} 
+                  color="#007bff" 
+                  style={{ marginRight: 8 }} 
+                />
+                <Text style={styles.modalTitle}>
+                  {editingPerson ? 'Edit Person' : 'Add Person'}
+                </Text>
+              </View>
+              <TouchableOpacity onPress={() => {
+                setShowAddPerson(false);
+                setEditingPerson(null);
+                setNewPerson({
+                  firstName: '',
+                  lastName: '',
+                  dateOfBirth: { day: '', month: '', year: '' },
+                  gender: 'other',
+                  relationship: '',
+                  aboutThem: '',
+                  favoriteColors: [],
+                  favoriteFlowers: [],
+                  allergies: [],
+                  budgetRange: { min: 30, max: 80 },
+                  specialDates: [],
+                  address: { street: '', city: '', postcode: '' },
+                  contactInfo: { phone: '', email: '' },
+                });
+              }}>
+                <Ionicons name="close" size={24} color="#6c757d" />
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView 
+              style={styles.modalContent}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 100 }}
+            >
             <TextInput
               style={styles.input}
               placeholder="First Name"
               value={newPerson.firstName}
               onChangeText={(text) => setNewPerson({...newPerson, firstName: text})}
+              returnKeyType="next"
             />
             <TextInput
               style={styles.input}
               placeholder="Last Name"
               value={newPerson.lastName}
               onChangeText={(text) => setNewPerson({...newPerson, lastName: text})}
+              returnKeyType="next"
             />
             <TextInput
               style={styles.input}
               placeholder="Relationship (e.g., Mother, Brother, Friend, Colleague)"
               value={newPerson.relationship}
               onChangeText={(text) => setNewPerson({...newPerson, relationship: text})}
+              returnKeyType="next"
             />
             <View style={styles.dateInputContainer}>
               <Text style={styles.dateLabel}>🎂 Date of Birth</Text>
@@ -1334,6 +1499,7 @@ export default function App() {
               onChangeText={(text) => setNewPerson({...newPerson, aboutThem: text})}
               multiline
               numberOfLines={4}
+              returnKeyType="next"
             />
             <TextInput
               style={styles.input}
@@ -1343,6 +1509,8 @@ export default function App() {
                 ...newPerson, 
                 contactInfo: {...newPerson.contactInfo, phone: text}
               })}
+              returnKeyType="next"
+              keyboardType="phone-pad"
             />
             <TextInput
               style={styles.input}
@@ -1352,19 +1520,23 @@ export default function App() {
                 ...newPerson, 
                 contactInfo: {...newPerson.contactInfo, email: text}
               })}
+              returnKeyType="done"
+              keyboardType="email-address"
+              onSubmitEditing={() => Keyboard.dismiss()}
             />
-          </ScrollView>
-          
-          <View style={styles.modalFooter}>
-            <TouchableOpacity 
-              style={styles.button} 
-              onPress={editingPerson ? editPerson : addPerson}
-            >
-              <Text style={styles.buttonText}>
-                {editingPerson ? 'Update Person' : 'Add Person'}
-              </Text>
-            </TouchableOpacity>
-          </View>
+            </ScrollView>
+            
+            <View style={styles.modalFooter}>
+              <TouchableOpacity 
+                style={styles.button} 
+                onPress={editingPerson ? editPerson : addPerson}
+              >
+                <Text style={styles.buttonText}>
+                  {editingPerson ? 'Update Person' : 'Add Person'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </Modal>
     </SafeAreaView>
@@ -1450,7 +1622,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 16,
-    paddingTop: 32,
+    paddingTop: 48,
     backgroundColor: '#f8f9fa',
     borderBottomWidth: 1,
     borderBottomColor: '#e9ecef',
@@ -1576,8 +1748,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   statLabel: {
-    fontSize: 11,
-    color: '#6c757d',
+    fontSize: 9,
+    color: '#000000',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     textAlign: 'center',
@@ -1865,6 +2037,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  suggestionImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 12,
+    backgroundColor: '#f8f9fa',
+  },
   suggestionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1971,7 +2150,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalFooter: {
-    padding: 20,
+    paddingTop: 12,
+    paddingBottom: 2,
+    paddingHorizontal: 20,
     backgroundColor: '#ffffff',
     borderTopWidth: 1,
     borderTopColor: '#e9ecef',
@@ -1980,6 +2161,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
   },
   dateInputContainer: {
     marginBottom: 15,

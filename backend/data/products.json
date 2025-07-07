@@ -1,122 +1,586 @@
 [
-    {
-      "name": "Eucalyptus",
-      "url": "https://gardeniashop.co.uk/products/eucalyptus-1",
-      "image": null
-    },
-    {
-      "name": "Pre-designed wedding flowers",
-      "url": "https://gardeniashop.co.uk/products/pre-designed-wedding-flowers",
-      "image": null
-    },
-    {
-      "name": "Our pick of the bunch",
-      "url": "https://gardeniashop.co.uk/products/our-pick-of-the-bunch",
-      "image": null
-    },
-    {
-      "name": "Seasonal Pretty Pastels Handtie",
-      "url": "https://gardeniashop.co.uk/products/seasonal-pretty-pastels-handtie",
-      "image": null
-    },
-    {
-      "name": "Seasonal White & Green Handtie",
-      "url": "https://gardeniashop.co.uk/products/seasonal-white-green-handtie",
-      "image": null
-    },
-    {
-      "name": "Seasonal Pretty Pastels Jam Jar",
-      "url": "https://gardeniashop.co.uk/products/seasonal-pretty-jam-jar",
-      "image": null
-    },
-    {
-      "name": "Luxury pick of the bunch",
-      "url": "https://gardeniashop.co.uk/products/luxury-pick-of-the-bunch",
-      "image": null
-    },
-    {
-      "name": "Seasonal Bold & Bright Handtie",
-      "url": "https://gardeniashop.co.uk/products/seasonal-bold-bright-handtie",
-      "image": null
-    },
-    {
-      "name": "Our Pick of the Peonies",
-      "url": "https://gardeniashop.co.uk/products/our-pick-of-the-peonies",
-      "image": null
-    },
-    {
-      "name": "Seasonal Pink Handtie",
-      "url": "https://gardeniashop.co.uk/products/seasonal-pink-handtie",
-      "image": null
-    },
-    {
-      "name": "'True Love' Red Roses with Eucalyptus",
-      "url": "https://gardeniashop.co.uk/products/true-love-red-roses-with-eucalyptus",
-      "image": null
-    },
-    {
-      "name": "Pink & White Peonies",
-      "url": "https://gardeniashop.co.uk/products/peonies-pink-white",
-      "image": null
-    },
-    {
-      "name": "Our Pick of the Peony Bunch",
-      "url": "https://gardeniashop.co.uk/products/our-pick-of-the-peony-bunch",
-      "image": null
-    },
-    {
-      "name": "Seasonal Cream & Yellow Handtie",
-      "url": "https://gardeniashop.co.uk/products/seasonal-yellow-and-cream-handtie",
-      "image": null
-    },
-    {
-      "name": "Sunflowers",
-      "url": "https://gardeniashop.co.uk/products/sunflowers",
-      "image": null
-    },
-    {
-      "name": "Seasonal Bold & Bright Mixed Bunch",
-      "url": "https://gardeniashop.co.uk/products/seasonal-bold-bright-mixed-bunch",
-      "image": null
-    },
-    {
-      "name": "Lilies",
-      "url": "https://gardeniashop.co.uk/products/lilies",
-      "image": null
-    },
-    {
-      "name": "Luxury Natural Red Rose Bunch",
-      "url": "https://gardeniashop.co.uk/products/festive-luxury-red-rose-bunch",
-      "image": null
-    },
-    {
-      "name": "Natural White Rose Bunch",
-      "url": "https://gardeniashop.co.uk/products/festive-natural-white-rose-bunch",
-      "image": null
-    },
-    {
-      "name": "Seasonal Peony Handtied Bouquet",
-      "url": "https://gardeniashop.co.uk/products/seasonal-peony-handtie",
-      "image": null
-    },
-    {
-      "name": "Peony bundle",
-      "url": "https://gardeniashop.co.uk/products/peony-bundle",
-      "image": null
-    },
-    {
-      "name": "Seasonal Peony Jam Jar Posy",
-      "url": "https://gardeniashop.co.uk/products/seasonal-peony-jam-jar",
-      "image": null
-    },
-    {
-      "name": "Pink lisianthus",
-      "url": "https://gardeniashop.co.uk/products/dark-pink-lisianthus",
-      "image": null
-    },
-    {
-      "name": "Coral Peonies",
-      "url": "https://gardeniashop.co.uk/products/coral-peonies",
-      "image": null
-    }
-  ]
+  {
+    "name": "Our pick of the bunch",
+    "price": 35,
+    "priceText": "Regular price £35.00 Regular price Sale price £35.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Summerpickofthebunch.jpg?v=1618922262&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Pickofthebunchexample.jpg?v=1618922262&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Birdseyeviewofflowerbunch.jpg?v=1618922262&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Summerflowerpickofthebunch.jpg?v=1618922262&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/our-pick-of-the-bunch",
+    "scrapedAt": "2025-07-07T04:39:17.870Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Seasonal Pretty Pastels Handtie",
+    "price": 50,
+    "priceText": "Regular price £50.00 Regular price Sale price £50.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Prettypastelshandtieside.jpg?v=1593703628&width=1946",
+        "alt": "Seasonal Pretty Pastels Hand-Tied Bouquet featuring fresh, seasonal flowers in soft pastel hues."
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/PrettyPastelshandtieheadon.jpg?v=1593703629&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/PrettyPastelshandtiesideon.jpg?v=1593703629&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/seasonal-pretty-pastels-handtie",
+    "scrapedAt": "2025-07-07T04:39:19.217Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Seasonal White & Green Handtie",
+    "price": 50,
+    "priceText": "Regular price £50.00 Regular price Sale price £50.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Whiteandgreenhandtieside.jpg?v=1618409741&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Whiteandgreenhandtieheadon.jpg?v=1618409741&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Whiteandgreenhandtiecloseup.jpg?v=1593704105&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/seasonal-white-green-handtie",
+    "scrapedAt": "2025-07-07T04:39:20.561Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Seasonal Pretty Pastels Jam Jar",
+    "price": 35,
+    "priceText": "Regular price £35.00 Regular price Sale price £35.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/SeasonalPrettyJamJar.jpg?v=1616682773&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/SeasonalprettyJamjarcloseup.jpg?v=1616682773&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/seasonal-pretty-jam-jar",
+    "scrapedAt": "2025-07-07T04:39:21.917Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Luxury pick of the bunch",
+    "price": 65,
+    "priceText": "Regular price £65.00 Regular price Sale price £65.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Luxurypick1.jpg?v=1591281366&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Luxurypick2.jpg?v=1591281367&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Luxurypick3.jpg?v=1591281367&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/luxury-pick-of-the-bunch",
+    "scrapedAt": "2025-07-07T04:39:23.340Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Seasonal Bold & Bright Handtie",
+    "price": 50,
+    "priceText": "Regular price £50.00 Regular price Sale price £50.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Boldandbrighthandtieside.jpg?v=1593703151&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Boldandbrighthandtieheadon.jpg?v=1593703151&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Boldandbrighthandtiecloseup.jpg?v=1593703151&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/seasonal-bold-bright-handtie",
+    "scrapedAt": "2025-07-07T04:39:24.655Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Seasonal Pink Handtie",
+    "price": 50,
+    "priceText": "Regular price £50.00 Regular price Sale price £50.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/SeasonalPinkHandtie-topdown.jpg?v=1652181400&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/SeasonalPinkHandtie-sideon.jpg?v=1652181400&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/SeasonalPinkHandtie-closeup.jpg?v=1618409386&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/seasonal-pink-handtie",
+    "scrapedAt": "2025-07-07T04:39:25.958Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Eucalyptus",
+    "price": 20,
+    "priceText": "Regular price £20.00 Regular price Sale price £20.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/eUCALYPTUSINZINCBUCKET.jpg?v=1604403484&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/eUCALYPTUSCLOSEUP.jpg?v=1604403556&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/eucalyptus-1",
+    "scrapedAt": "2025-07-07T04:39:27.314Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "'True Love' Red Roses with Eucalyptus",
+    "price": 80,
+    "priceText": "Regular price £80.00 Regular price Sale price £80.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/2RedRoseswithEucalyptus.jpg?v=1705674841&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/24RedRoseswithEucalyptus-SideOn.jpg?v=1705674841&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/24RedRoseswithEucalyptus-Close-up.jpg?v=1705674841&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/true-love-red-roses-with-eucalyptus",
+    "scrapedAt": "2025-07-07T04:39:28.664Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Pre-designed wedding flowers",
+    "price": 95,
+    "priceText": "Regular price £95.00 Regular price Sale price £95.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Pre-designedweddingflowers.jpg?v=1620999244&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/BridalW_Gwithtext.jpg?v=1666180465&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Bridesmaids-W_Gwithtext.jpg?v=1666180465&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Buttonhole-W_Gwithtext.jpg?v=1666180465&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Vase-W_Gwithtext.jpg?v=1666180465&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Jamjar-W_Gwithtext.jpg?v=1666180465&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/Bold_Brightpre-design.jpg?v=1696846686&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Pre-design-Colourful_Brightvase-withtext.jpg?v=1696846686&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Pre-design-Colourhul_BrightVase-withtext.jpg?v=1696846686&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Bridal-PPwithtext.jpg?v=1696846686&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/Pre-Design-PrettyPastels-Bridesmaid.jpg?v=1697098193&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/pre-designed-wedding-flowers",
+    "scrapedAt": "2025-07-07T04:39:29.996Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Seasonal Cream & Yellow Handtie",
+    "price": 50,
+    "priceText": "Regular price £50.00 Regular price Sale price £50.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Yellow_Creamhandtie-sideon.jpg?v=1618409089&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Yellow_Creamhandtie-topdown.jpg?v=1618409089&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Yellow_Creamhandtie-closeup.jpg?v=1618409089&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/seasonal-yellow-and-cream-handtie",
+    "scrapedAt": "2025-07-07T04:39:31.329Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Sunflowers",
+    "price": 20,
+    "priceText": "Regular price £20.00 Regular price Sale price £20.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/10stemsofsunflowers.jpg?v=1593704642&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/5stemsofsunflowers.jpg?v=1593704642&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Sunflowers.jpg?v=1593704642&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/sunflowers",
+    "scrapedAt": "2025-07-07T04:39:32.630Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Seasonal Bold & Bright Mixed Bunch",
+    "price": 35,
+    "priceText": "Regular price £35.00 Regular price Sale price £35.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Seasonalboldandbrightmixedbunch.jpg?v=1667390130&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/seasonal-bold-bright-mixed-bunch",
+    "scrapedAt": "2025-07-07T04:39:33.986Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Lilies",
+    "price": 30,
+    "priceText": "Regular price £30.00 Regular price Sale price £30.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Liles.jpg?v=1611667387&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/lilies",
+    "scrapedAt": "2025-07-07T04:39:35.305Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Luxury Natural Red Rose Bunch",
+    "price": 87.5,
+    "priceText": "Regular price £87.50 Regular price Sale price £87.50 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Redrosefestiveside.jpg?v=1635515413&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Redrosefestivetopdown.jpg?v=1635515412&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Redrosefestivesideon.jpg?v=1635515413&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/festive-luxury-red-rose-bunch",
+    "scrapedAt": "2025-07-07T04:39:36.663Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Natural White Rose Bunch",
+    "price": 72.5,
+    "priceText": "Regular price £72.50 Regular price Sale price £72.50 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Naturalwhiterosebunchsideon.jpg?v=1635515641&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Naturalwhiteroseheadon.jpg?v=1635515641&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Naturalwhiterosecloseup.jpg?v=1635515641&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/festive-natural-white-rose-bunch",
+    "scrapedAt": "2025-07-07T04:39:38.000Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Pink lisianthus",
+    "price": 15,
+    "priceText": "Regular price £15.00 Regular price Sale price £15.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Darkpinklisianthus.jpg?v=1604402321&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Darklisianthuscloseup.jpg?v=1604402348&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/dark-pink-lisianthus",
+    "scrapedAt": "2025-07-07T04:39:39.318Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "White Lisianthus",
+    "price": 15,
+    "priceText": "Regular price £15.00 Regular price Sale price £15.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Whitelisianthuszincbucket.jpg?v=1604402714&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Whitelisianthuswhiteclose.jpg?v=1604402733&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/white-lisianthus-1",
+    "scrapedAt": "2025-07-07T04:39:40.633Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Wild flower bundle",
+    "price": 30,
+    "priceText": "Regular price £30.00 Regular price Sale price £30.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Summerwildflowerbundle1.jpg?v=1622559141&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Summerwildflowerbundle2.jpg?v=1622559141&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/wild-flower-bundle",
+    "scrapedAt": "2025-07-07T04:39:42.030Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Summer Sunflower bundle",
+    "price": 36.5,
+    "priceText": "Regular price £36.50 Regular price Sale price £36.50 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Summersunflowerbundle1.jpg?v=1622558995&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Summersunflowerbundle2.jpg?v=1622558995&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/summer-sunflower-bundle",
+    "scrapedAt": "2025-07-07T04:39:43.394Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Seasonal White & Green Jam Jar",
+    "price": 35,
+    "priceText": "Regular price £35.00 Regular price Sale price £35.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/White_GreenJamjar.jpg?v=1667392714&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/seasonal-white-green-jam-jar",
+    "scrapedAt": "2025-07-07T04:39:44.726Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "100% Compostable Funeral Sheaf - White & Green",
+    "price": 57.5,
+    "priceText": "Regular price £57.50 Regular price Sale price £57.50 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/Funeralsheaf6.jpg?v=1699009703&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/Funeralsheaf5.jpg?v=1699009702&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/Funeralsheaf2.jpg?v=1699010045&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/compostable-funeral-sheaf-white-green",
+    "scrapedAt": "2025-07-07T04:39:46.027Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Purple lisianthus",
+    "price": 15,
+    "priceText": "Regular price £15.00 Regular price Sale price £15.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/Lisianthusbucket.jpg?v=1604401950&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/products/389eee5a-f3d7-4bfd-b70c-31013f04f2c7.jpg?v=1604401950&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/purple-lisianthus",
+    "scrapedAt": "2025-07-07T04:39:47.350Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  },
+  {
+    "name": "Luxury Mixed Roses Handtie",
+    "price": 105,
+    "priceText": "Regular price £105.00 Regular price Sale price £105.00 Unit price / per Sale Sold out",
+    "images": [
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/LuxuryMixedRoses-TopDown.jpg?v=1705674914&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/LuxuryMixedRoses-Sideon.jpg?v=1705674914&width=1946",
+        "alt": ""
+      },
+      {
+        "src": "https://gardeniashop.co.uk/cdn/shop/files/LuxuryMixedRoses-CloseUp.jpg?v=1737394733&width=1946",
+        "alt": ""
+      }
+    ],
+    "url": "https://gardeniashop.co.uk/products/luxury-mixed-roses-handtie",
+    "scrapedAt": "2025-07-07T04:39:48.715Z",
+    "description": "Delivery charges calculated at checkout.",
+    "category": "",
+    "availability": "",
+    "tags": []
+  }
+]
